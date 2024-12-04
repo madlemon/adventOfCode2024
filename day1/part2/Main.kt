@@ -1,4 +1,4 @@
-package day1.part1
+package day1.part2
 
 import java.io.File
 
@@ -17,19 +17,11 @@ fun main() {
         locationIdListRight.add(split[1].toInt())
     }
 
-    locationIdListLeft.sort()
-    locationIdListRight.sort()
-
-    val distances = locationIdListLeft.zip(locationIdListRight) { idl, idr -> distance(idl, idr) }
-
-    println("Result: " + distances.sum())
-}
-
-fun distance(a: Int, b: Int): Int {
-    if (a > b) {
-        return a - b
-    } else if (a < b) {
-        return b - a
+    var sum = 0
+    for (left in locationIdListLeft) {
+        val appearances = locationIdListRight.count { it == left }
+        sum += appearances * left
     }
-    return 0
+    println("Result: $sum")
 }
+

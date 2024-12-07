@@ -18,11 +18,11 @@ fun main() {
         -1 to -1  // Diagonal Up-Left
     )
 
-    fun isWordAt(x: Int, dx: Int, y: Int, dy: Int): Boolean {
+    fun isWordAt(x: Int, y: Int, direction: Vector): Boolean {
         for (i in 0..word.lastIndex) {
             val offset = word.centerIndex()
-            val newX = x + (i - offset) * dx
-            val newY = y + (i - offset) * dy
+            val newX = x + (i - offset) * direction.x
+            val newY = y + (i - offset) * direction.y
             val outOfBounds = newY !in puzzle.indices || newX !in puzzle[newY].indices
             if (outOfBounds || puzzle[newY][newX] != word[i]) {
                 return false
@@ -31,14 +31,12 @@ fun main() {
         return true
     }
 
-    var count = 0
-    for (y in puzzle.indices) {
-        for (x in puzzle[y].indices) {
-            if (puzzle[y][x] == word.centerChar() &&
-                diagonalDirections.count { (dx, dy) -> isWordAt(x, dx, y, dy) } >= 2
-            ) {
-                count++
-            }
+    val count = puzzle.indices.sumOf { y ->
+        puzzle[y].indices.sumOf { x ->
+            if (puzzle[y][x] == word.centerChar()
+                && diagonalDirections.count { isWordAt(x, y, it) } >= 2
+            )
+                1L else 0
         }
     }
     println(count)
@@ -46,6 +44,14 @@ fun main() {
 
 private fun String.centerIndex(): Int = (this.length - 1) / 2
 private fun String.centerChar(): Char = this[centerIndex()]
+
+typealias Vector = Pair<Int, Int>
+
+val Vector.y: Int
+    get() = this.first
+
+val Vector.x: Int
+    get() = this.second
 
 
 

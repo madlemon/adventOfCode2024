@@ -19,10 +19,10 @@ fun main() {
         -1 to -1  // Diagonal Up-Left
     )
 
-    fun isWordAt(x: Int, dx: Int, y: Int, dy: Int): Boolean {
+    fun isWordAt(x: Int, y: Int, direction: Vector): Boolean {
         for (i in 0..word.lastIndex) {
-            val newX = x + i * dx
-            val newY = y + i * dy
+            val newX = x + i * direction.x
+            val newY = y + i * direction.y
             val outOfBounds = newY !in puzzle.indices || newX !in puzzle[newY].indices
             if (outOfBounds || puzzle[newY][newX] != word[i]) {
                 return false
@@ -33,10 +33,17 @@ fun main() {
 
     val count = puzzle.indices.sumOf { y ->
         puzzle[y].indices.sumOf { x ->
-            directions.count { (dx, dy) -> isWordAt(x, dx, y, dy) }
+            directions.count { isWordAt(x, y, it) }
         }
     }
 
     println(count)
 }
 
+typealias Vector = Pair<Int, Int>
+
+val Vector.y: Int
+    get() = this.first
+
+val Vector.x: Int
+    get() = this.second

@@ -8,82 +8,32 @@ private const val INPUT = "day4/input.txt"
 fun main() {
     val puzzle = File(INPUT).useLines { it.toList() }
     val word = "XMAS"
+    val directions = listOf(
+        0 to 1,   // Right
+        0 to -1,  // Left
+        1 to 0,   // Down
+        -1 to 0,  // Up
+        1 to 1,   // Diagonal Down-Right
+        -1 to 1,  // Diagonal Up-Right
+        1 to -1,  // Diagonal Down-Left
+        -1 to -1  // Diagonal Up-Left
+    )
 
-    var count = 0;
-
-    for ((y, _) in puzzle.withIndex()) {
-        for ((x, _) in puzzle[0].withIndex()) {
-            for (i in 0..word.lastIndex) {
-                if (x + i > puzzle[x].lastIndex || puzzle[y][x + i] != word[i]) {
-                    break
-                }
-                if (i == word.lastIndex) {
-                    count++
-                }
+    fun isWordAt(x: Int, dx: Int, y: Int, dy: Int): Boolean {
+        for (i in 0..word.lastIndex) {
+            val newX = x + i * dx
+            val newY = y + i * dy
+            val outOfBounds = newY !in puzzle.indices || newX !in puzzle[newY].indices
+            if (outOfBounds || puzzle[newY][newX] != word[i]) {
+                return false
             }
+        }
+        return true
+    }
 
-            for (i in 0..word.lastIndex) {
-                if (x - i < 0 || puzzle[y][x - i] != word[i]) {
-                    break
-                }
-                if (i == word.lastIndex) {
-                    count++
-                }
-            }
-
-            for (i in 0..word.lastIndex) {
-                if (y + i > puzzle[y].lastIndex || puzzle[y + i][x] != word[i]) {
-                    break
-                }
-                if (i == word.lastIndex) {
-                    count++
-                }
-            }
-
-            for (i in 0..word.lastIndex) {
-                if (y - i < 0 || puzzle[y - i][x] != word[i]) {
-                    break
-                }
-                if (i == word.lastIndex) {
-                    count++
-                }
-            }
-
-            for (i in 0..word.lastIndex) {
-                if (x + i > puzzle[x].lastIndex || y + i > puzzle[y].lastIndex || puzzle[y + i][x + i] != word[i]) {
-                    break
-                }
-                if (i == word.lastIndex) {
-                    count++
-                }
-            }
-
-            for (i in 0..word.lastIndex) {
-                if (x + i > puzzle[x].lastIndex || y - i < 0 || puzzle[y - i][x + i] != word[i]) {
-                    break
-                }
-                if (i == word.lastIndex) {
-                    count++
-                }
-            }
-
-            for (i in 0..word.lastIndex) {
-                if (x - i < 0 || y + i > puzzle[y].lastIndex || puzzle[y + i][x - i] != word[i]) {
-                    break
-                }
-                if (i == word.lastIndex) {
-                    count++
-                }
-            }
-
-            for (i in 0..word.lastIndex) {
-                if (x - i < 0 || y - i < 0 || puzzle[y - i][x - i] != word[i]) {
-                    break
-                }
-                if (i == word.lastIndex) {
-                    count++
-                }
-            }
+    val count = puzzle.indices.sumOf { y ->
+        puzzle[y].indices.sumOf { x ->
+            directions.count { (dx, dy) -> isWordAt(x, dx, y, dy) }
         }
     }
 

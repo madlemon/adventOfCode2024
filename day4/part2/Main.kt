@@ -45,7 +45,7 @@ fun main() {
 private fun String.centerIndex(): Int = (this.length - 1) / 2
 private fun String.centerChar(): Char = this[centerIndex()]
 
-typealias Vector = Pair<Int, Int>
+private typealias Vector = Pair<Int, Int>
 
 val Vector.y: Int
     get() = this.first

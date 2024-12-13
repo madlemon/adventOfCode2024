@@ -40,7 +40,7 @@ fun main() {
     println(count)
 }
 
-typealias Vector = Pair<Int, Int>
+private typealias Vector = Pair<Int, Int>
 
 val Vector.y: Int
     get() = this.first
